@@ -1,6 +1,7 @@
 import Foundation
 import GoogleSignIn
 
+@MainActor
 @Observable
 final class GoogleAuthService {
     var currentUser: GIDGoogleUser?
@@ -72,10 +73,9 @@ final class GoogleAuthService {
                 throw AuthError.noRootViewController
             }
             let result = try await user.addScopes([AppConstants.calendarScope], presenting: rootVC)
-            if let updatedUser = result?.user {
-                self.currentUser = updatedUser
-                return updatedUser.accessToken.tokenString
-            }
+            let updatedUser = result.user
+            self.currentUser = updatedUser
+            return updatedUser.accessToken.tokenString
             throw AuthError.scopeNotGranted
         }
 

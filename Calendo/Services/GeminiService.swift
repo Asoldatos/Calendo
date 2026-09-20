@@ -4,7 +4,7 @@ import GoogleGenerativeAI
 /// Gemini AI service for parsing Greek natural language into structured appointment data.
 /// Uses Google Gemini Flash (free tier) for intelligent understanding of complex Greek expressions
 /// like "από τέσσερις και μισή μέχρι δύο και είκοσι" or "αύριο στις 3 ο Γιώργος Παπαδόπουλος"
-final class GeminiService {
+final class GeminiService: @unchecked Sendable {
     static let shared = GeminiService()
 
     private let model: GenerativeModel

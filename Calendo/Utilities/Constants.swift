@@ -46,6 +46,22 @@ extension Color {
     static let textTertiary = Color.white.opacity(0.4)
 }
 
+extension ShapeStyle where Self == Color {
+    static var calendoPurple: Color { .calendoPurple }
+    static var calendoPurpleDark: Color { .calendoPurpleDark }
+    static var calendoCoral: Color { .calendoCoral }
+    static var calendoTeal: Color { .calendoTeal }
+    static var calendoGold: Color { .calendoGold }
+    
+    static var bgDark: Color { .bgDark }
+    static var bgMid: Color { .bgMid }
+    static var bgCard: Color { .bgCard }
+    
+    static var textPrimary: Color { .textPrimary }
+    static var textSecondary: Color { .textSecondary }
+    static var textTertiary: Color { .textTertiary }
+}
+
 // MARK: - Design System
 enum CalendoDesign {
     static let cornerRadius: CGFloat = 20

@@ -20,7 +20,7 @@ struct CalendarEventResponse: Codable {
 }
 
 // MARK: - Google Calendar Service
-final class GoogleCalendarService {
+final class GoogleCalendarService: @unchecked Sendable {
     static let shared = GoogleCalendarService()
     private init() {}
 
