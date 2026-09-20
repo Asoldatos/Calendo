@@ -55,5 +55,8 @@ struct ContentView: View {
             }
         }
         .animation(.smooth(duration: 0.4), value: authService.isSignedIn)
+        .task {
+            await authService.restoreSession()
+        }
     }
 }

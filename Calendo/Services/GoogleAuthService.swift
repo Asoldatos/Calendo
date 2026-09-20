@@ -20,13 +20,23 @@ final class GoogleAuthService {
 
     // MARK: - Init & Restore
     init() {
-        // Try to restore silently
-        GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-            Task { @MainActor [weak self] in
-                if let user {
-                    self?.currentUser = user
-                }
-            }
+        // Restore is called separately via restoreSession()
+        // to avoid sending non-Sendable GIDGoogleUser across actor boundaries
+        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+            // Access currentUser synchronously - it's already cached by the SDK
+            self.currentUser = GIDSignIn.sharedInstance.currentUser
+        }
+    }
+
+    /// Call this on app launch to refresh tokens if needed
+    func restoreSession() async {
+        guard GIDSignIn.sharedInstance.hasPreviousSignIn() else { return }
+        do {
+            let user = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+            self.currentUser = user
+        } catch {
+            // Silent failure is OK - user will just need to sign in again
+            self.currentUser = nil
         }
     }
 
