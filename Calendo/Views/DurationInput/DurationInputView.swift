@@ -98,7 +98,13 @@ struct DurationInputView: View {
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 56)
-                        .background(durationText.isEmpty ? Color.gray : CalendoDesign.purpleGradient)
+                        .background {
+                            if durationText.isEmpty {
+                                Color.gray
+                            } else {
+                                CalendoDesign.purpleGradient
+                            }
+                        }
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     .disabled(durationText.isEmpty || isParsing)

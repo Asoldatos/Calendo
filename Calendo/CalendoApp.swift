@@ -11,6 +11,7 @@ enum AppScreen: Hashable {
 }
 
 // MARK: - Quick Action Manager
+@MainActor
 @Observable
 final class QuickActionManager {
     static let shared = QuickActionManager()

@@ -76,7 +76,6 @@ final class GoogleAuthService {
             let updatedUser = result.user
             self.currentUser = updatedUser
             return updatedUser.accessToken.tokenString
-            throw AuthError.scopeNotGranted
         }
 
         // Refresh token if needed
