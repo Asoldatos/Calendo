@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 /// Phone input screen — "Εισάγετε το τηλέφωνο του ασθενούς"
 /// Has a skip button for when the patient doesn't want to give their number.
@@ -55,7 +55,7 @@ struct PhoneInputView: View {
                             .foregroundStyle(.textSecondary)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 16)
-                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+                            .calendoGlass(in: RoundedRectangle(cornerRadius: 14))
 
                         // Phone number field
                         TextField("69XXXXXXXX", text: $phoneNumber)
@@ -64,7 +64,7 @@ struct PhoneInputView: View {
                             .keyboardType(.phonePad)
                             .focused($isPhoneFocused)
                             .padding(16)
-                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+                            .calendoGlass(in: RoundedRectangle(cornerRadius: 14))
                     }
                     .padding(.horizontal, CalendoDesign.screenPadding)
                 }
@@ -124,7 +124,7 @@ struct PhoneInputView: View {
                     .font(.title3.bold())
                     .foregroundStyle(.white)
                     .frame(width: 40, height: 40)
-                    .glassEffect(.regular, in: Circle())
+                    .calendoGlass(in: Circle())
             }
 
             Spacer()
@@ -184,7 +184,7 @@ struct PhoneInputView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: 14))
         .padding(.horizontal, CalendoDesign.screenPadding)
     }
 

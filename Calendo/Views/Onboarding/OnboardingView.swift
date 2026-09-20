@@ -15,32 +15,37 @@ struct OnboardingView: View {
             // Floating medical icons (decorative)
             FloatingIconsBackground()
 
-            VStack(spacing: 0) {
-                Spacer()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    Spacer(minLength: 60)
 
-                // Logo & App Name
-                VStack(spacing: 16) {
-                    // App Icon
-                    Image("AppIcon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 120, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 28))
-                        .shadow(color: .calendoPurple.opacity(0.4), radius: 20, y: 10)
+                    // Logo & App Name
+                    VStack(spacing: 16) {
+                        // App Icon - use SF Symbol since AppIcon set can't be loaded as Image
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 28)
+                                .fill(CalendoDesign.purpleGradient)
+                                .frame(width: 120, height: 120)
+                                .shadow(color: .calendoPurple.opacity(0.4), radius: 20, y: 10)
+
+                            Image(systemName: "calendar.badge.plus")
+                                .font(.system(size: 50, weight: .medium))
+                                .foregroundStyle(.white)
+                        }
                         .scaleEffect(animateLogo ? 1.0 : 0.5)
                         .opacity(animateLogo ? 1.0 : 0.0)
 
-                    Text("Calendo")
-                        .font(.system(size: 42, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .opacity(animateIn ? 1.0 : 0.0)
-                        .offset(y: animateIn ? 0 : 20)
-                }
+                        Text("Calendo")
+                            .font(.system(size: 42, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .opacity(animateIn ? 1.0 : 0.0)
+                            .offset(y: animateIn ? 0 : 20)
+                    }
 
-                Spacer().frame(height: 24)
+                    Spacer(minLength: 24)
 
-                // Welcome Text
-                VStack(spacing: 12) {
+                    // Welcome Text
+                    VStack(spacing: 12) {
                     Text("Καλώς ήρθατε!")
                         .font(.title2.bold())
                         .foregroundStyle(.white)
@@ -54,7 +59,7 @@ struct OnboardingView: View {
                 .opacity(animateIn ? 1.0 : 0.0)
                 .offset(y: animateIn ? 0 : 30)
 
-                Spacer().frame(height: 16)
+                    Spacer(minLength: 16)
 
                 // Feature List
                 VStack(spacing: 14) {
@@ -66,7 +71,7 @@ struct OnboardingView: View {
                 .opacity(animateIn ? 1.0 : 0.0)
                 .offset(y: animateIn ? 0 : 40)
 
-                Spacer()
+                    Spacer(minLength: 40)
 
                 // Sign In Button
                 VStack(spacing: 16) {
@@ -101,7 +106,9 @@ struct OnboardingView: View {
                 .opacity(animateIn ? 1.0 : 0.0)
                 .offset(y: animateIn ? 0 : 50)
 
-                Spacer().frame(height: 40)
+                    Spacer(minLength: 40)
+                }
+                .frame(minHeight: UIScreen.main.bounds.height)
             }
         }
         .alert("Σφάλμα Σύνδεσης", isPresented: $showError) {

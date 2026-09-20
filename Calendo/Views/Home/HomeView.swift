@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 struct HomeView: View {
     @Environment(GoogleAuthService.self) private var authService
@@ -64,7 +64,7 @@ struct HomeView: View {
                     .font(.title3)
                     .foregroundStyle(.textSecondary)
                     .frame(width: 44, height: 44)
-                    .glassEffect(.regular, in: Circle())
+                    .calendoGlass(in: Circle())
             }
         }
     }
@@ -101,7 +101,7 @@ struct HomeView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 32)
-            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
+            .calendoGlass(in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
         }
         .onAppear {
             withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
@@ -144,7 +144,7 @@ struct HomeView: View {
             }
         }
         .padding(CalendoDesign.cardPadding)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
     }
 }
 
@@ -173,7 +173,7 @@ struct InfoCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: 16))
     }
 }
 

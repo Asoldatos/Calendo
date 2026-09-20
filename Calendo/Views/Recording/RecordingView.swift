@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 struct RecordingView: View {
     @Binding var navigationPath: NavigationPath
@@ -59,7 +59,7 @@ struct RecordingView: View {
                         .foregroundStyle(.white)
                 }
                 .padding(32)
-                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 20))
+                .calendoGlass(in: RoundedRectangle(cornerRadius: 20))
             }
         }
         .navigationBarHidden(true)
@@ -87,7 +87,7 @@ struct RecordingView: View {
                     .font(.title3.bold())
                     .foregroundStyle(.white)
                     .frame(width: 40, height: 40)
-                    .glassEffect(.regular, in: Circle())
+                    .calendoGlass(in: Circle())
             }
 
             Spacer()
@@ -168,7 +168,7 @@ struct RecordingView: View {
             }
             .frame(maxHeight: 100)
             .padding(16)
-            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+            .calendoGlass(in: RoundedRectangle(cornerRadius: 16))
         }
     }
 
@@ -246,7 +246,7 @@ struct DetectionChip: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: 12))
         .animation(.spring(response: 0.4), value: detected)
     }
 }

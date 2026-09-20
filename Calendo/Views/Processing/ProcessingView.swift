@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 /// Processing screen — creates the Google Calendar event and shows success/failure.
 struct ProcessingView: View {
@@ -181,7 +181,7 @@ struct ProcessingView: View {
             }
         }
         .padding(CalendoDesign.cardPadding)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
         .padding(.horizontal, CalendoDesign.screenPadding)
     }
 
@@ -194,7 +194,7 @@ struct ProcessingView: View {
                 .multilineTextAlignment(.center)
         }
         .padding(CalendoDesign.cardPadding)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: CalendoDesign.cornerRadius))
         .padding(.horizontal, CalendoDesign.screenPadding)
     }
 

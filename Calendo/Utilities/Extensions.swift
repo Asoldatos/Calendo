@@ -6,8 +6,13 @@ struct GlassMorphismModifier: ViewModifier {
     var cornerRadius: CGFloat = CalendoDesign.cornerRadius
 
     func body(content: Content) -> some View {
-        content
-            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: cornerRadius))
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: cornerRadius))
+        } else {
+            content
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: cornerRadius))
+        }
     }
 }
 
@@ -19,10 +24,21 @@ extension View {
     func calendoBackground() -> some View {
         self.background(CalendoDesign.backgroundGradient.ignoresSafeArea())
     }
+
+    /// Glass effect wrapper that falls back to ultraThinMaterial on older iOS
+    @ViewBuilder
+    func calendoGlass<S: InsettableShape>(in shape: S) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular, in: shape)
+        } else {
+            self.background(.ultraThinMaterial, in: shape)
+        }
+    }
 }
 
 // MARK: - Root View Controller (for Google Sign-In)
 extension UIApplication {
+    @MainActor
     static var rootViewController: UIViewController? {
         guard let windowScene = shared.connectedScenes.first as? UIWindowScene,
               let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController

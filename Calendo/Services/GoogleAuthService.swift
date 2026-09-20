@@ -1,5 +1,6 @@
 import Foundation
 import GoogleSignIn
+import UIKit
 
 @MainActor
 @Observable
@@ -19,19 +20,13 @@ final class GoogleAuthService {
 
     // MARK: - Init & Restore
     init() {
-        // Restore is kicked off asynchronously
-        Task { @MainActor [weak self] in
-            await self?.restorePreviousSignIn()
-        }
-    }
-
-    func restorePreviousSignIn() async {
-        do {
-            let user = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
-            self.currentUser = user
-        } catch {
-            // No previous sign-in or session expired — silently ignore
-            self.currentUser = nil
+        // Try to restore silently
+        GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
+            Task { @MainActor [weak self] in
+                if let user {
+                    self?.currentUser = user
+                }
+            }
         }
     }
 
@@ -70,9 +65,12 @@ final class GoogleAuthService {
                 throw AuthError.noRootViewController
             }
             let result = try await user.addScopes([AppConstants.calendarScope], presenting: rootVC)
-            let updatedUser = result.user
-            self.currentUser = updatedUser
-            return updatedUser.accessToken.tokenString
+            if let updatedUser = result?.user {
+                self.currentUser = updatedUser
+                return updatedUser.accessToken.tokenString
+            }
+            // If result is non-optional in this SDK version, this handles both cases
+            throw AuthError.scopeNotGranted
         }
 
         // Refresh token if needed

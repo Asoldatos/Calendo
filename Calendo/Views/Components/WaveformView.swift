@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 /// Animated audio waveform visualization that responds to microphone input levels.
 struct WaveformView: View {

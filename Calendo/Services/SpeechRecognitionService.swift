@@ -18,7 +18,7 @@ final class SpeechRecognitionService {
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
 
-    init() {
+    nonisolated init() {
         self.recognizer = SFSpeechRecognizer(locale: AppConstants.greekLocale)
     }
 
@@ -72,13 +72,10 @@ final class SpeechRecognitionService {
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
 
         // Create recognition request
-        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        guard let request = recognitionRequest else {
-            throw SpeechError.requestCreationFailed
-        }
-
+        let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
         request.addsPunctuation = true
+        self.recognitionRequest = request
 
         // Use on-device recognition if available (for privacy & speed)
         if recognizer.supportsOnDeviceRecognition {
@@ -87,8 +84,6 @@ final class SpeechRecognitionService {
 
         // Start recognition task
         recognitionTask = recognizer.recognitionTask(with: request) { [weak self] result, error in
-            guard let self else { return }
-
             if let result {
                 let text = result.bestTranscription.formattedString
                 Task { @MainActor [weak self] in
@@ -100,8 +95,7 @@ final class SpeechRecognitionService {
                 let errorDesc = error.localizedDescription
                 let errorCode = (error as NSError).code
                 Task { @MainActor [weak self] in
-                    // Don't report cancellation errors
-                    if errorCode != 216 { // kAFAssistantErrorDomain cancel
+                    if errorCode != 216 {
                         self?.errorMessage = errorDesc
                     }
                     self?.stopRecording()
@@ -115,6 +109,7 @@ final class SpeechRecognitionService {
 
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
+
             // Calculate audio level for visualization
             guard let channelData = buffer.floatChannelData?[0] else { return }
             let frames = buffer.frameLength
@@ -124,6 +119,7 @@ final class SpeechRecognitionService {
             }
             let average = sum / Float(frames)
             let normalizedLevel = min(1.0, average * 5.0)
+
             Task { @MainActor [weak self] in
                 self?.audioLevel = normalizedLevel
             }

@@ -1,4 +1,4 @@
-import SwiftUI
+﻿import SwiftUI
 
 /// Duration input chatbox — shown when the user didn't specify how long the appointment lasts.
 /// The user types the duration in their own words in Greek (e.g. "μισή ώρα", "45 λεπτά",
@@ -58,7 +58,7 @@ struct DurationInputView: View {
                             .font(.body)
                             .foregroundStyle(.white)
                             .padding(16)
-                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14))
+                            .calendoGlass(in: RoundedRectangle(cornerRadius: 14))
                             .focused($isTextFieldFocused)
                             .autocorrectionDisabled()
                             .submitLabel(.done)
@@ -146,7 +146,7 @@ struct DurationInputView: View {
                     .font(.title3.bold())
                     .foregroundStyle(.white)
                     .frame(width: 40, height: 40)
-                    .glassEffect(.regular, in: Circle())
+                    .calendoGlass(in: Circle())
             }
 
             Spacer()
@@ -181,7 +181,7 @@ struct DurationInputView: View {
             }
         }
         .padding(12)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+        .calendoGlass(in: RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, CalendoDesign.screenPadding)
     }
 
@@ -229,7 +229,7 @@ struct ExampleChip: View {
                 .foregroundStyle(.textSecondary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .glassEffect(.regular, in: Capsule())
+                .calendoGlass(in: Capsule())
         }
     }
 }
