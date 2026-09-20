@@ -19,25 +19,23 @@ final class GoogleAuthService {
 
     // MARK: - Init & Restore
     init() {
-        restorePreviousSignIn()
+        // Restore is kicked off asynchronously
+        Task { @MainActor [weak self] in
+            await self?.restorePreviousSignIn()
+        }
     }
 
-    func restorePreviousSignIn() {
-        GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-            Task { @MainActor in
-                if let user {
-                    self?.currentUser = user
-                    // Ensure calendar scope is still granted
-                    if let scopes = user.grantedScopes, scopes.contains(AppConstants.calendarScope) {
-                        // Good - calendar access is present
-                    }
-                }
-            }
+    func restorePreviousSignIn() async {
+        do {
+            let user = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+            self.currentUser = user
+        } catch {
+            // No previous sign-in or session expired — silently ignore
+            self.currentUser = nil
         }
     }
 
     // MARK: - Sign In with Calendar Scope
-    @MainActor
     func signIn() async throws {
         guard let rootVC = UIApplication.rootViewController else {
             throw AuthError.noRootViewController
@@ -58,7 +56,6 @@ final class GoogleAuthService {
     }
 
     // MARK: - Get Calendar Access Token
-    @MainActor
     func getCalendarAccessToken() async throws -> String {
         guard let user = currentUser else {
             throw AuthError.notAuthenticated

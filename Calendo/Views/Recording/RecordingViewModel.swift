@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 @Observable
 final class RecordingViewModel {
     // MARK: - State
@@ -14,7 +15,6 @@ final class RecordingViewModel {
     }
 
     // MARK: - Start Recording
-    @MainActor
     func startRecording() async {
         let authorized = await speechService.requestPermission()
         guard authorized else { return }
@@ -27,13 +27,11 @@ final class RecordingViewModel {
     }
 
     // MARK: - Stop & Parse
-    @MainActor
     func stopRecording() {
         speechService.stopRecording()
     }
 
     // MARK: - Parse Transcription with Gemini AI
-    @MainActor
     func parseTranscription() async {
         let text = speechService.transcription
         guard !text.isEmpty else {
@@ -56,7 +54,6 @@ final class RecordingViewModel {
     }
 
     // MARK: - Finish Recording Flow
-    @MainActor
     func finish() async -> AppScreen {
         isFinishing = true
         stopRecording()

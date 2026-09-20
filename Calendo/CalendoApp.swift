@@ -36,7 +36,9 @@ class CalendoAppDelegate: NSObject, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         // Cold start: handle shortcut item
         if let shortcutItem = options.shortcutItem {
-            _ = QuickActionManager.shared.handleShortcutItem(shortcutItem)
+            Task { @MainActor in
+                _ = QuickActionManager.shared.handleShortcutItem(shortcutItem)
+            }
         }
 
         let config = UISceneConfiguration(
@@ -55,8 +57,10 @@ class CalendoSceneDelegate: NSObject, UIWindowSceneDelegate {
         performActionFor shortcutItem: UIApplicationShortcutItem,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        let handled = QuickActionManager.shared.handleShortcutItem(shortcutItem)
-        completionHandler(handled)
+        Task { @MainActor in
+            let handled = QuickActionManager.shared.handleShortcutItem(shortcutItem)
+            completionHandler(handled)
+        }
     }
 }
 

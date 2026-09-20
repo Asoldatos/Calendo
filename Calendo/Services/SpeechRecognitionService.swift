@@ -2,6 +2,7 @@ import Foundation
 import Speech
 import AVFoundation
 
+@MainActor
 @Observable
 final class SpeechRecognitionService {
     // MARK: - Published State
@@ -16,14 +17,12 @@ final class SpeechRecognitionService {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
-    private var levelTimer: Timer?
 
     init() {
         self.recognizer = SFSpeechRecognizer(locale: AppConstants.greekLocale)
     }
 
     // MARK: - Permission Request
-    @MainActor
     func requestPermission() async -> Bool {
         // Request speech recognition permission
         let speechStatus = await withCheckedContinuation { continuation in
@@ -59,7 +58,6 @@ final class SpeechRecognitionService {
     }
 
     // MARK: - Start Recording
-    @MainActor
     func startRecording() throws {
         // Cancel any ongoing task
         stopRecording()
@@ -92,18 +90,21 @@ final class SpeechRecognitionService {
             guard let self else { return }
 
             if let result {
-                Task { @MainActor in
-                    self.transcription = result.bestTranscription.formattedString
+                let text = result.bestTranscription.formattedString
+                Task { @MainActor [weak self] in
+                    self?.transcription = text
                 }
             }
 
             if let error {
-                Task { @MainActor in
+                let errorDesc = error.localizedDescription
+                let errorCode = (error as NSError).code
+                Task { @MainActor [weak self] in
                     // Don't report cancellation errors
-                    if (error as NSError).code != 216 { // kAFAssistantErrorDomain cancel
-                        self.errorMessage = error.localizedDescription
+                    if errorCode != 216 { // kAFAssistantErrorDomain cancel
+                        self?.errorMessage = errorDesc
                     }
-                    self.stopRecording()
+                    self?.stopRecording()
                 }
             }
         }
@@ -115,7 +116,17 @@ final class SpeechRecognitionService {
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
             // Calculate audio level for visualization
-            self?.processAudioLevel(buffer: buffer)
+            guard let channelData = buffer.floatChannelData?[0] else { return }
+            let frames = buffer.frameLength
+            var sum: Float = 0
+            for i in 0..<Int(frames) {
+                sum += abs(channelData[i])
+            }
+            let average = sum / Float(frames)
+            let normalizedLevel = min(1.0, average * 5.0)
+            Task { @MainActor [weak self] in
+                self?.audioLevel = normalizedLevel
+            }
         }
 
         audioEngine.prepare()
@@ -125,7 +136,6 @@ final class SpeechRecognitionService {
     }
 
     // MARK: - Stop Recording
-    @MainActor
     func stopRecording() {
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
@@ -135,30 +145,9 @@ final class SpeechRecognitionService {
         recognitionTask = nil
         isRecording = false
         audioLevel = 0.0
-        levelTimer?.invalidate()
-        levelTimer = nil
 
         // Deactivate audio session
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-    }
-
-    // MARK: - Audio Level Processing
-    private func processAudioLevel(buffer: AVAudioPCMBuffer) {
-        guard let channelData = buffer.floatChannelData?[0] else { return }
-        let frames = buffer.frameLength
-
-        var sum: Float = 0
-        for i in 0..<Int(frames) {
-            sum += abs(channelData[i])
-        }
-        let average = sum / Float(frames)
-
-        // Normalize to 0...1 range with some amplification
-        let normalizedLevel = min(1.0, average * 5.0)
-
-        Task { @MainActor in
-            self.audioLevel = normalizedLevel
-        }
     }
 }
 
