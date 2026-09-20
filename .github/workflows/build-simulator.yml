@@ -1,0 +1,51 @@
+name: Build Calendo for Simulator (Appetize.io)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-simulator:
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.app/Contents/Developer || sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Calendo.xcodeproj \
+            -scheme Calendo \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            -derivedDataPath build_sim \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Zip for Appetize.io
+        run: |
+          cd build_sim/Build/Products/Debug-iphonesimulator
+          zip -r -y Calendo-Simulator.zip Calendo.app
+          mv Calendo-Simulator.zip $GITHUB_WORKSPACE/
+
+      - name: Upload Simulator Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calendo-Simulator-Zip
+          path: Calendo-Simulator.zip
+          retention-days: 7
