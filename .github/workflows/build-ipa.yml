@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    # Use the correct runner for iOS 26 SDK
+    runs-on: macos-26
     timeout-minutes: 30
 
     steps:
@@ -18,9 +19,7 @@ jobs:
 
       - name: Select Xcode Version
         run: |
-          # List available Xcode versions and select the latest
-          ls /Applications | grep Xcode
-          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_26.app/Contents/Developer || sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
 
       - name: Install XcodeGen
@@ -37,6 +36,7 @@ jobs:
 
       - name: Build Unsigned Archive
         run: |
+          set -o pipefail
           xcodebuild archive \
             -project Calendo.xcodeproj \
             -scheme Calendo \
@@ -52,10 +52,11 @@ jobs:
       - name: Package IPA for AltStore / Sideloadly
         run: |
           mkdir -p Payload
-          cp -R "build/Calendo.xcarchive/Products/Applications/Calendo.app" Payload/
+          # Use wildcard just in case the bundle name varies slightly
+          cp -R build/Calendo.xcarchive/Products/Applications/*.app Payload/
           zip -r -y Calendo.ipa Payload
           rm -rf Payload
-          echo "✅ IPA created: Calendo.ipa ($(du -h Calendo.ipa | cut -f1))"
+          echo "✅ IPA created: Calendo.ipa"
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
