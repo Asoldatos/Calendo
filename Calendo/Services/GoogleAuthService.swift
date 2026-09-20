@@ -20,6 +20,10 @@ final class GoogleAuthService {
 
     // MARK: - Init & Restore
     init() {
+        // Explicitly configure GIDSignIn to prevent Info.plist reading crashes
+        let config = GIDConfiguration(clientID: AppConstants.googleClientID)
+        GIDSignIn.sharedInstance.configuration = config
+
         // Restore is called separately via restoreSession()
         // to avoid sending non-Sendable GIDGoogleUser across actor boundaries
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
