@@ -18,7 +18,7 @@ final class SpeechRecognitionService {
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
 
-    nonisolated init() {
+    init() {
         self.recognizer = SFSpeechRecognizer(locale: AppConstants.greekLocale)
     }
 

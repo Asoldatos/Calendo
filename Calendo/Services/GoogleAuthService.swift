@@ -65,12 +65,8 @@ final class GoogleAuthService {
                 throw AuthError.noRootViewController
             }
             let result = try await user.addScopes([AppConstants.calendarScope], presenting: rootVC)
-            if let updatedUser = result?.user {
-                self.currentUser = updatedUser
-                return updatedUser.accessToken.tokenString
-            }
-            // If result is non-optional in this SDK version, this handles both cases
-            throw AuthError.scopeNotGranted
+            self.currentUser = result.user
+            return result.user.accessToken.tokenString
         }
 
         // Refresh token if needed
