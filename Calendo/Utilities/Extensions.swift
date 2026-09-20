@@ -40,10 +40,24 @@ extension View {
 extension UIApplication {
     @MainActor
     static var rootViewController: UIViewController? {
-        guard let windowScene = shared.connectedScenes.first as? UIWindowScene,
-              let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
-        else { return nil }
-        return rootVC
+        // Find the active window scene
+        let windowScene = shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .compactMap { $0 as? UIWindowScene }
+            .first ?? shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+            
+        // Find the key window or just the first window
+        guard let window = windowScene?.windows.first(where: { $0.isKeyWindow }) ?? windowScene?.windows.first else {
+            return nil
+        }
+        
+        // Find the topmost view controller
+        var topController = window.rootViewController
+        while let presentedViewController = topController?.presentedViewController {
+            topController = presentedViewController
+        }
+        
+        return topController
     }
 }
 

@@ -1,79 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>el</string>
-	<key>CFBundleDisplayName</key>
-	<string>Calendo</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>LaunchBackground</string>
-	</dict>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
-		<key>UISceneConfigurations</key>
-		<dict/>
-	</dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>el</string>
+    <key>CFBundleDisplayName</key>
+    <string>Calendo</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchScreen</key>
+    <dict>
+        <key>UIColorName</key>
+        <string>LaunchBackground</string>
+    </dict>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+        <key>UISceneConfigurations</key>
+        <dict/>
+    </dict>
 
-	<!-- Privacy Permissions -->
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Η εφαρμογή χρειάζεται πρόσβαση στο μικρόφωνο για αναγνώριση φωνής κατά την καταχώρηση ραντεβού.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Η εφαρμογή χρησιμοποιεί αναγνώριση ομιλίας για να καταγράψει τα στοιχεία του ραντεβού σας στα Ελληνικά.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Η εφαρμογή χρειάζεται πρόσβαση στο μικρόφωνο για την ηχογράφηση φωνής κατά την υπαγόρευση ραντεβού.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Η εφαρμογή χρειάζεται αναγνώριση ομιλίας για να μετατρέψει τη φωνή σας σε κείμενο.</string>
 
-	<!-- Google Sign-In URL Scheme -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.718756612878-vgbmspg71o536u77bg42k3rkolm4gfnb</string>
-			</array>
-			<key>CFBundleURLName</key>
-			<string>Google Sign-In</string>
-		</dict>
-	</array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.718756612878-vgbmspg71o536u77bg42k3rkolm4gfnb</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>Google Sign-In</string>
+        </dict>
+    </array>
 
-	<key>GIDClientID</key>
-	<string>718756612878-vgbmspg71o536u77bg42k3rkolm4gfnb.apps.googleusercontent.com</string>
+    <key>GIDClientID</key>
+    <string>718756612878-vgbmspg71o536u77bg42k3rkolm4gfnb.apps.googleusercontent.com</string>
 
-	<!-- Home Screen Quick Actions -->
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.calendo.app.record</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Νέο Ραντεβού</string>
-			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>Εγγραφή φωνής</string>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>mic.fill</string>
-		</dict>
-	</array>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>com.calendo.app.record</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Νέο Ραντεβού</string>
+            <key>UIApplicationShortcutItemSubtitle</key>
+            <string>Εγγραφή φωνής</string>
+            <key>UIApplicationShortcutItemIconSymbolName</key>
+            <string>mic.fill</string>
+        </dict>
+    </array>
 </dict>
 </plist>

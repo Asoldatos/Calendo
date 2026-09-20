@@ -15,100 +15,104 @@ struct OnboardingView: View {
             // Floating medical icons (decorative)
             FloatingIconsBackground()
 
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    Spacer(minLength: 60)
+            GeometryReader { geometry in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        Spacer(minLength: 60)
 
-                    // Logo & App Name
-                    VStack(spacing: 16) {
-                        // App Icon - use SF Symbol since AppIcon set can't be loaded as Image
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 28)
-                                .fill(CalendoDesign.purpleGradient)
-                                .frame(width: 120, height: 120)
-                                .shadow(color: .calendoPurple.opacity(0.4), radius: 20, y: 10)
+                        // Logo & App Name
+                        VStack(spacing: 16) {
+                            // App Icon - use SF Symbol since AppIcon set can't be loaded as Image
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 28)
+                                    .fill(CalendoDesign.purpleGradient)
+                                    .frame(width: 120, height: 120)
+                                    .shadow(color: .calendoPurple.opacity(0.4), radius: 20, y: 10)
 
-                            Image(systemName: "calendar.badge.plus")
-                                .font(.system(size: 50, weight: .medium))
-                                .foregroundStyle(.white)
-                        }
-                        .scaleEffect(animateLogo ? 1.0 : 0.5)
-                        .opacity(animateLogo ? 1.0 : 0.0)
-
-                        Text("Calendo")
-                            .font(.system(size: 42, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .opacity(animateIn ? 1.0 : 0.0)
-                            .offset(y: animateIn ? 0 : 20)
-                    }
-
-                    Spacer(minLength: 24)
-
-                    // Welcome Text
-                    VStack(spacing: 12) {
-                    Text("Καλώς ήρθατε!")
-                        .font(.title2.bold())
-                        .foregroundStyle(.white)
-
-                    Text("Το Calendo σας βοηθά να καταχωρείτε\nραντεβού ασθενών με τη φωνή σας.")
-                        .font(.body)
-                        .foregroundStyle(.textSecondary)
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(4)
-                }
-                .opacity(animateIn ? 1.0 : 0.0)
-                .offset(y: animateIn ? 0 : 30)
-
-                    Spacer(minLength: 16)
-
-                // Feature List
-                VStack(spacing: 14) {
-                    FeatureRow(icon: "mic.fill", color: .calendoCoral, text: "Εγγραφή φωνής στα Ελληνικά")
-                    FeatureRow(icon: "brain.head.profile.fill", color: .calendoPurple, text: "AI αναγνώριση με Gemini")
-                    FeatureRow(icon: "calendar.badge.plus", color: .calendoTeal, text: "Αυτόματη καταχώρηση στο Google Calendar")
-                }
-                .padding(.horizontal, 32)
-                .opacity(animateIn ? 1.0 : 0.0)
-                .offset(y: animateIn ? 0 : 40)
-
-                    Spacer(minLength: 40)
-
-                // Sign In Button
-                VStack(spacing: 16) {
-                    Button {
-                        signIn()
-                    } label: {
-                        HStack(spacing: 12) {
-                            if isSigningIn {
-                                ProgressView()
-                                    .tint(.white)
-                            } else {
-                                Image(systemName: "g.circle.fill")
-                                    .font(.title2)
+                                Image(systemName: "calendar.badge.plus")
+                                    .font(.system(size: 50, weight: .medium))
+                                    .foregroundStyle(.white)
                             }
-                            Text(isSigningIn ? "Σύνδεση..." : "Σύνδεση με Google")
-                                .font(.headline)
+                            .scaleEffect(animateLogo ? 1.0 : 0.5)
+                            .opacity(animateLogo ? 1.0 : 0.0)
+
+                            Text("Calendo")
+                                .font(.system(size: 42, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .opacity(animateIn ? 1.0 : 0.0)
+                                .offset(y: animateIn ? 0 : 20)
                         }
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(CalendoDesign.purpleGradient)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(color: .calendoPurple.opacity(0.4), radius: 12, y: 6)
+
+                        Spacer(minLength: 24)
+
+                        // Welcome Text
+                        VStack(spacing: 12) {
+                            Text("Καλώς ήρθατε!")
+                                .font(.title2.bold())
+                                .foregroundStyle(.white)
+
+                            Text("Το Calendo σας βοηθά να καταχωρείτε\nραντεβού ασθενών με τη φωνή σας.")
+                                .font(.body)
+                                .foregroundStyle(.textSecondary)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(4)
+                        }
+                        .opacity(animateIn ? 1.0 : 0.0)
+                        .offset(y: animateIn ? 0 : 30)
+
+                        Spacer(minLength: 16)
+
+                        // Feature List
+                        VStack(spacing: 14) {
+                            FeatureRow(icon: "mic.fill", color: .calendoCoral, text: "Εγγραφή φωνής στα Ελληνικά")
+                            FeatureRow(icon: "brain.head.profile.fill", color: .calendoPurple, text: "AI αναγνώριση με Gemini")
+                            FeatureRow(icon: "calendar.badge.plus", color: .calendoTeal, text: "Αυτόματη καταχώρηση στο Google Calendar")
+                        }
+                        .padding(.horizontal, 32)
+                        .opacity(animateIn ? 1.0 : 0.0)
+                        .offset(y: animateIn ? 0 : 40)
+
+                        Spacer(minLength: 40)
+
+                        // Sign In Button
+                        VStack(spacing: 16) {
+                            Button {
+                                Task { @MainActor in
+                                    await signIn()
+                                }
+                            } label: {
+                                HStack(spacing: 12) {
+                                    if isSigningIn {
+                                        ProgressView()
+                                            .tint(.white)
+                                    } else {
+                                        Image(systemName: "g.circle.fill")
+                                            .font(.title2)
+                                    }
+                                    Text(isSigningIn ? "Σύνδεση..." : "Σύνδεση με Google")
+                                        .font(.headline)
+                                }
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 56)
+                                .background(CalendoDesign.purpleGradient)
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .shadow(color: .calendoPurple.opacity(0.4), radius: 12, y: 6)
+                            }
+                            .disabled(isSigningIn)
+
+                            Text("Απαιτείται πρόσβαση στο Google Calendar")
+                                .font(.caption)
+                                .foregroundStyle(.textTertiary)
+                        }
+                        .padding(.horizontal, CalendoDesign.screenPadding)
+                        .opacity(animateIn ? 1.0 : 0.0)
+                        .offset(y: animateIn ? 0 : 50)
+
+                        Spacer(minLength: 40)
                     }
-                    .disabled(isSigningIn)
-
-                    Text("Απαιτείται πρόσβαση στο Google Calendar")
-                        .font(.caption)
-                        .foregroundStyle(.textTertiary)
+                    .frame(minHeight: geometry.size.height)
                 }
-                .padding(.horizontal, CalendoDesign.screenPadding)
-                .opacity(animateIn ? 1.0 : 0.0)
-                .offset(y: animateIn ? 0 : 50)
-
-                    Spacer(minLength: 40)
-                }
-                .frame(minHeight: UIScreen.main.bounds.height)
             }
         }
         .alert("Σφάλμα Σύνδεσης", isPresented: $showError) {
@@ -126,20 +130,18 @@ struct OnboardingView: View {
         }
     }
 
-    private func signIn() {
+    private func signIn() async {
         isSigningIn = true
         HapticManager.impact(.medium)
-        Task {
-            do {
-                try await authService.signIn()
-                UserDefaults.standard.set(true, forKey: AppConstants.hasCompletedOnboarding)
-                HapticManager.success()
-            } catch {
-                showError = true
-                HapticManager.error()
-            }
-            isSigningIn = false
+        do {
+            try await authService.signIn()
+            UserDefaults.standard.set(true, forKey: AppConstants.hasCompletedOnboarding)
+            HapticManager.success()
+        } catch {
+            showError = true
+            HapticManager.error()
         }
+        isSigningIn = false
     }
 }
 
