@@ -1,0 +1,73 @@
+name: Build Calendo IPA
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          # List available Xcode versions and select the latest
+          ls /Applications | grep Xcode
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Resolve Swift Package Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project Calendo.xcodeproj \
+            -scheme Calendo
+
+      - name: Build Unsigned Archive
+        run: |
+          xcodebuild archive \
+            -project Calendo.xcodeproj \
+            -scheme Calendo \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Calendo.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="" \
+            | tee build.log
+
+      - name: Package IPA for AltStore / Sideloadly
+        run: |
+          mkdir -p Payload
+          cp -R "build/Calendo.xcarchive/Products/Applications/Calendo.app" Payload/
+          zip -r -y Calendo.ipa Payload
+          rm -rf Payload
+          echo "✅ IPA created: Calendo.ipa ($(du -h Calendo.ipa | cut -f1))"
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calendo-IPA
+          path: Calendo.ipa
+          retention-days: 90
+
+      - name: Upload Build Log (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 7
